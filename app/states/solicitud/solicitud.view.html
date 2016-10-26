@@ -1,0 +1,266 @@
+<div ng-controller="solicitudController as vm" ng-cloak>
+	<barra-menu-material sesion="vm.usario" titulo="vm.titulo"></barra-menu-material>
+	<md-content class="md-vista" ng-show="vm.procesando">
+		<div flex layout="column" layout-align="center center" style="height: 75%;">
+			<h1 class="md-display-1" style="text-align: center;">Guardando solicitud y enviando correos</h1>
+			<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+		</div>
+	</md-content>
+	<md-content class="md-vista" ng-hide="vm.procesando">
+		<div flex layout layout-align="center center" layout-padding layout-wrap>
+			<h2 class="md-headline">Elige lo que necesitas para tu solicitud</h2>
+		</div>
+		<div flex layout layout-align="start center" layout-padding layout-wrap>
+			<div flex="25" flex-sm="50" flex-xs="50" layout layout-align="center center">
+				<md-button class="md-raised md-primary" ng-click="vm.dom_mostrarFormas( true, false, true, true )">
+					<md-icon md-font-set="material-icons">flight</md-icon>
+					<md-icon md-font-set="material-icons">hotel</md-icon>
+					<span hide-xs>Vuelo y hotel</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-sm="50" flex-xs="50" layout layout-align="center center">
+				<md-button class="md-raised md-primary" ng-click="vm.dom_mostrarFormas( true, false, true, false )">
+					<md-icon md-font-set="material-icons">flight</md-icon>
+					<span hide-xs>Solamente Vuelo</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-sm="50" flex-xs="50" layout layout-align="center center">
+				<md-button class="md-raised md-primary" ng-click="vm.dom_mostrarFormas( true, false, false, true )">
+					<md-icon md-font-set="material-icons">hotel</md-icon>
+					<span hide-xs>Solamente Hotel</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-sm="50" flex-xs="50" layout layout-align="center center">
+				<md-button class="md-raised md-primary" ng-click="vm.dom_mostrarFormas( true, true, false, false )">
+					<md-icon md-font-set="material-icons">attach_money</md-icon>
+					<span hide-xs>Solamente Viáticos</span>
+				</md-button>
+			</div>
+		</div>
+		<div id="forma-solicitud" flex layout-padding layout-wrap ng-show="vm.mostrarGeneral">
+			<p class="md-title">Información general</p>
+			<md-divider></md-divider>
+			<md-content>
+				<form name="vm.forma_general" layout-padding>
+					<div flex layout="column">
+						<div layout layout-align="space-around center" layout-wrap>
+							<md-input-container flex-xs="100">
+								<label>Fecha inicio</label>
+								<md-datepicker ng-model="vm.solicitud.fecha_inicio" name="fecha_inicio" md-max-date="vm.solicitud.fecha_fin" required></md-datepicker>
+								<div ng-messages="vm.forma_general.fecha_inicio.$error">
+									<div ng-message="valid">El valor ingresado no es una fecha</div>
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-input-container>
+							<md-input-container flex-xs="100">
+								<label>Fecha fin</label>
+								<md-datepicker ng-model="vm.solicitud.fecha_fin" name="fecha_fin" md-min-date="vm.solicitud.fecha_inicio" required></md-datepicker>
+								<div ng-messages="vm.forma_general.fecha_fin.$error">
+									<div ng-message="valid">El valor ingresado no es una fecha</div>
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-input-container>
+						</div>
+						<md-input-container flex>
+							<label>Proyecto</label>
+							<md-select ng-model="vm.solicitud.id_proyecto" name="id_proyecto" required>
+								<md-option ng-value="proyecto.id" ng-repeat="proyecto in vm.proyectos">{{ proyecto.nombre }}</md-option>
+							</md-select>
+							<div ng-messages="vm.forma_general.id_proyecto.$error">
+								<div ng-message="required">Campo requerido</div>
+							</div>
+						</md-input-container>
+						<md-input-container flex>
+							<label>Motivo del viaje</label>
+							<input type="text" ng-model="vm.solicitud.motivo" name="motivo" required/>
+							<div ng-messages="vm.forma_general.motivo.$error">
+								<div ng-message="required">Campo requerido</div>
+							</div>
+						</md-input-container>
+					</div>
+				</form>
+			</md-content>
+		</div>
+		<div flex layout-padding ng-show="vm.mostrarViaticos">
+			<p class="md-title">Información para viáticos</p>
+			<md-divider></md-divider>
+			<md-content>
+				<form name="vm.forma_viaticos" layout-padding>
+					<div flex layout layout-wrap>
+						<div flex="100" layout>
+							<md-autocomplete flex required name="locacion" md-input-name="locacion"
+							md-selected-item="vm.locacion_seleccionada" md-search-text="vm.solicitud.locacion"
+							md-items="item in vm.buscador.buscarAeropuerto( vm.solicitud.locacion, vm.aeropuertos )"
+							md-item-text="item.display" md-min-length="1" md-floating-label="Ciudad destino" md-require-match="true">
+								<md-item-template>
+									<span md-highlight-text="vm.solicitud.locacion" md-highlight-flags="^i">{{ item.display }}</span>
+								</md-item-template>
+								<md-not-found>No se encontró ciudad con el nombre "{{ vm.solicitud.locacion }}"</md-not-found>
+								<div ng-messages="vm.forma_viaticos.locacion.$error">
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-autocomplete>
+						</div>
+					</div>
+				</form>
+			</md-content>
+		</div>
+		<div flex layout-padding ng-show="vm.mostrarVuelo">
+			<p class="md-title">Información de vuelos</p>
+			<md-divider></md-divider>
+			<md-content>
+				<form name="vm.forma_vuelos" layout-padding>
+					<div ng-repeat="vuelo in vm.solicitud.vuelos_solicitados track by $index">
+						<div flex layout layout-align="start center">
+							<div flex="50">
+								<span><md-icon md-font-set="material-icons">flight</md-icon></span>
+								<span class="md-subhead">Vuelo {{ $index + 1 }}</span>							
+							</div>
+							<div flex="50" layout layout-align="end center">
+								<md-button class="md-warn" ng-hide="$index === 0" ng-click="vm.eliminarVuelo( $index )">
+									<md-icon md-font-set="material-icons">delete</md-icon>
+									<span hide-xs>Eliminar Vuelo {{ $index + 1 }}</span>
+								</md-button>
+							</div>
+						</div>
+						<div flex layout layout-wrap>
+							<div flex="50" flex-xs="100">
+								<md-autocomplete flex required name="origen{{ $index }}" md-input-name="origen{{ $index }}"
+								md-selected-item="vuelo.origen" md-search-text="vuelo.origen_texto"
+								md-items="item in vm.buscador.buscarAeropuerto( vuelo.origen_texto, vm.aeropuertos )"
+								md-item-text="item.display" md-min-length="1" md-floating-label="Origen" md-require-match="true">
+									<md-item-template>
+										<span md-highlight-text="vuelo.origen_texto" md-highlight-flags="^i">{{ item.display }}</span>
+									</md-item-template>
+									<md-not-found>No se encontró ciudad o aeropuerto con el nombre "{{ vuelo.origen_texto }}"</md-not-found>
+									<div ng-messages="vm.forma_vuelos[ 'origen' + $index ].$error">
+										<div ng-message="required">Campo requerido</div>
+									</div>
+								</md-autocomplete>
+							</div>
+							<div flex="50" flex-xs="100">
+								<md-autocomplete flex required name="destino{{ $index }}" md-input-name="destino{{ $index }}"
+								md-selected-item="vuelo.destino" md-search-text="vuelo.destino_texto"
+								md-items="item in vm.buscador.buscarAeropuerto( vuelo.destino_texto, vm.aeropuertos )"
+								md-item-text="item.display" md-min-length="1" md-floating-label="Destino" md-require-match="true">
+									<md-item-template>
+										<span md-highlight-text="vuelo.destino_texto" md-highlight-flags="^i">{{ item.display }}</span>
+									</md-item-template>
+									<md-not-found>No se encontraró ciudad o aeropuerto con el nombre "{{ vuelo.origen_texto }}"</md-not-found>
+									<div ng-messages="vm.forma_vuelos[ 'destino' + $index ].$error">
+										<div ng-message="required">Campo requerido</div>
+									</div>
+								</md-autocomplete>
+							</div>
+						</div>
+						<div flex layout layout-wrap>
+							<md-input-container flex="50" flex-xs="100">
+								<label>Fecha salida</label>
+								<md-datepicker ng-model="vuelo.fecha" md-min-date="vm.solicitud.fecha_inicio"  md-max-date="vm.solicitud.fecha_fin" name="fecha_salida{{ $index }}"  required></md-datepicker>
+								<div ng-messages="vm.forma_vuelos[ 'fecha_salida' + $index ].$error">
+									<div ng-message="valid">El valor ingresado no es una fecha</div>
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-input-container>
+							<md-input-container flex="25" flex-xs="100">
+								<md-icon md-font-set="material-icons">access_time</md-icon>
+								<label>Hora mín. salida</label>
+								<md-select ng-model="vuelo.hora_min" ng-change="vm.fijarDiferenciaHoras( vuelo )" name="hora_min{{ $index }}" required>
+									<md-option ng-repeat="hora in vm.horas_24" ng-value="hora">{{ hora }}</md-option>
+								</md-select>
+								<div ng-messages="vm.informacionVuelos[ 'hora_min' + $index ].$error">
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-input-container>
+							<md-input-container flex="25" flex-xs="100">
+								<md-icon md-font-set="material-icons">access_time</md-icon>
+								<label>Hora máx. salida</label>
+								<md-select ng-model="vuelo.hora_max" ng-change="vm.fijarDiferenciaHoras( vuelo )" name="hora_max{{ $index }}" required>
+									<md-option ng-repeat="hora in vm.horas_24" ng-value="hora">{{ hora }}</md-option>
+								</md-select>
+								<div ng-messages="vm.informacionVuelos[ 'hora_max' + $index ].$error">
+									<div ng-message="required">Campo requerido</div>
+								</div>
+							</md-input-container>
+						</div>
+						<md-divider></md-divider>
+					</div>
+					<div flex layout layout-align="center center">
+						<md-button class="md-primary" ng-click="vm.agregarVuelo()">
+							<md-icon md-font-set="material-icons">add</md-icon>
+							Agregar vuelo
+						</md-button>
+					</div>
+				</form>
+			</md-content>
+		</div>
+		<div flex layout-padding ng-show="vm.mostrarHotel">
+			<p class="md-title">Información de hotel</p>
+			<md-divider></md-divider>
+			<md-content>
+				<form name="vm.forma_hoteles" layout-padding>
+					<div ng-repeat="hotel in vm.solicitud.hoteles_solicitados track by $index">
+						<div flex layout layout-align="start center">
+							<div flex="50">
+								<span><md-icon md-font-set="material-icons">hotel</md-icon></span>
+								<span class="md-subhead">Hotel {{ $index + 1 }}</span>							
+							</div>
+							<div flex="50" layout layout-align="end center" ng-show="$index !== 0">
+								<md-button class="md-warn" ng-hide="$index === 0" ng-click="vm.eliminarHotel( $index )">
+									<md-icon md-font-set="material-icons">delete</md-icon>
+									<span hide-xs>Eliminar Hotel {{ $index + 1 }}</span>
+								</md-button>
+							</div>
+						</div>
+						<div flex layout layout-wrap>
+							<md-autocomplete flex flex-xs="100" required name="hospedaje{{ $index }}" md-input-name="hospedaje{{ $index }}"
+							md-selected-item="hotel.ciudad" md-search-text="hotel.ciudad_texto"
+							md-items="item in vm.buscador.buscarAeropuerto( hotel.ciudad_texto, vm.aeropuertos )"
+							md-item-text="item.display" md-min-length="1" md-floating-label="Ciudad de hospedaje" md-require-match="true">
+								<md-item-template>
+									<span md-highlight-text="hotel.ciudad_texto" md-highlight-flags="^i">{{ item.display }}</span>
+								</md-item-template>
+								<md-not-found>No se encontraron ciudades con el nombre "{{ hotel.ciudad_texto }}"</md-not-found>
+							</md-autocomplete>
+							<md-input-container flex flex-xs="100">
+								<label>Número de noches</label>
+								<input ng-model="hotel.numero_noches" type="number" required min="0"/>
+							</md-input-container>
+						</div>
+						<div flex layout layout-align="start center">
+							<span class="md-caption">
+								Si tienes un hotel de preferencia o sabes dónde realizarás tus actividades anota la dirección o el enlace en un mapa de Google
+							</span>
+						</div>
+						<div flex layout layout-wrap>
+							<md-input-container flex flex-xs="100">
+								<label>Dirección</label>
+								<input ng-model="hotel.direccion" type="text"/>
+							</md-input-container>
+							<md-input-container flex flex-xs="100">
+								<label>Enlace de Google maps</label>
+								<input ng-model="hotel.web" type="text" />
+							</md-input-container>
+						</div>
+						<md-divider></md-divider>
+					</div>
+				</form>
+				<div layout layout-align="center center">
+					<md-button class="md-primary" ng-click="vm.agregarHotel( $index )">
+						<md-icon md-font-set="material-icons">add</md-icon>
+						Agregar hotel
+					</md-button>
+				</div>
+			</md-content>
+		</div>
+		<div flex>
+			&nbsp;
+		</div>
+		<div layout layout-align="end center" ng-show="vm.mostrarGeneral">
+			<md-button class="md-raised md-accent" ng-click="vm.enviarSolicitud( $event )">
+				<md-icon md-font-set="material-icons">send</md-icon>
+				Enviar solicitud
+			</md-button>
+		</div>
+	</md-content>
+</div>

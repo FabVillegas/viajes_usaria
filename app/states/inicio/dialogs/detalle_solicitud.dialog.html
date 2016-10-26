@@ -1,0 +1,184 @@
+<md-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Solicitud de {{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="vm.eliminar_solicitud( vm.solicitud )" ng-show="vm.solicitud.viajero === vm.usario.correo">
+				<md-icon md-font-set="material-icons">delete</md-icon>
+				<md-tooltip md-direction="top">Eliminar solicitud</md-tooltip>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.editar_solicitud( vm.solicitud )" ng-show="vm.solicitud.viajero === vm.usario.correo">
+				<md-icon md-font-set="material-icons">edit</md-icon>
+				<md-tooltip md-direction="top">Editar solicitud</md-tooltip>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.cerrar_detalle()">
+				<md-icon md-font-set="material-icons">close</md-icon>
+				<md-tooltip md-direction="top">Cerrar</md-tooltip>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<md-dialog-content>
+		<md-content>
+			<div flex layout layout-padding>
+				<div flex layout="column" layout-align="start start">
+					<p layout="column">
+						<span class="md-subhead" ng-repeat="hotel in vm.solicitud.hoteles_solicitados">
+							Viaje a {{ hotel.ciudad }}
+						</span>
+						<span class="md-subhead" ng-repeat="ciudad in vm.solicitud.ciudades_destino" ng-hide="vm.solicitud.hoteles_solicitados.length > 0">
+							{{ ciudad.nombre }}
+						</span>
+						<span class="md-body-2">{{ vm.solicitud.fecha_inicio | date:'dd-MMM-yy' }} al {{ vm.solicitud.fecha_fin | date:'dd-MMM-yy' }}</span>
+					</p>
+					<p layout="column">
+						<span class="md-subhead">Proyecto {{ vm.solicitud.nombre_proyecto }}</span>
+						<span class="md-body-2">{{ vm.solicitud.motivo }}</span>
+					</p>
+				</div>
+				<div flex layout="column" layout-align="start start" ng-hide="vm.solicitud.fecha_seleccion">
+					<p ng-hide="vm.solicitud.vuelos_solicitados.length === 0 && vm.solicitud.hoteles_solicitados.length === 0">Pedidos</p>
+					<div flex layout layout-align="start center" layout-padding ng-show="vm.solicitud.vuelos_solicitados.length > 0" ng-repeat="vuelo in vm.solicitud.vuelos_solicitados">
+						<span><md-icon md-font-set="material-icons">flight</md-icon></span>
+						<div flex layout="column">
+							<span class="md-body-2">{{ vuelo.origen + ' - ' + vuelo.destino }}</span>
+							<span class="md-caption">{{ vuelo.fecha | date:'dd-MMM-yy' }} | {{ vuelo.horario_origen }}</span>
+						</div>
+					</div>
+					<div flex layout layout-align="start center" layout-padding ng-show="vm.solicitud.hoteles_solicitados.length > 0" ng-repeat="hotel in vm.solicitud.hoteles_solicitados">
+						<span><md-icon md-font-set="material-icons">hotel</md-icon></span>
+						<div flex layout="column">
+							<span class="md-body-2">{{ hotel.ciudad }}</span>
+							<span class="md-caption">{{ hotel.numero_noches }} noches</span>
+						</div>
+					</div>
+				</div>
+				<div flex ng-show="vm.solicitud.fecha_seleccion">
+					<p ng-hide="vm.solicitud.vuelos_solicitados.length === 0 && vm.solicitud.hoteles_solicitados.length === 0">Seleccionados</p>
+					<div flex layout layout-align="start center" layout-padding ng-repeat="vuelo in vm.solicitud.vuelos_seleccionados" style="padding: 0;">
+						<span><md-icon md-font-set="material-icons">flight</md-icon></span>
+						<div flex layout="column">
+							<div flex layout layout-align="start center">
+								<div flex layout="column" layout-align="center start">
+									<span class="md-body-1">{{ vuelo.aerolinea }}</span>
+									<span class="md-caption">{{ vuelo.costo | currency }}</span>
+								</div>
+								<div flex layout="column" layout-align="center start">
+									<span class="md-body-1">Salida</span>
+									<span class="md-caption">{{ vuelo.fecha_salida | date:'dd-MMM-yy' }}</span>
+									<span class="md-caption">{{ vuelo.hora_salida }}</span>									
+								</div>
+								<div flex layout="column" layout-align="center start">
+									<span class="md-body-1">Llegada</span>
+									<span class="md-caption">{{ vuelo.fecha_llegada | date:'dd-MMM-yy' }}</span>
+									<span class="md-caption">{{ vuelo.hora_llegada }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div flex layout layout-align="start center" layout-padding ng-repeat="hotel in vm.solicitud.hoteles_seleccionados">
+						<span><md-icon md-font-set="material-icons">hotel</md-icon></span>
+						<div flex layout="column">
+							<span class="md-body-1">{{ hotel.nombre }}</span>
+							<span class="md-caption">{{ hotel.direccion }}</span>
+							<span class="md-caption">{{ hotel.costo | currency }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<md-divider></md-divider>
+			<div flex ng-show="vm.solicitud.necesita_cotizacion === false">
+				<div flex layout layout-align="start center" layout-padding>
+					<span class="md-subhead">Esta solicitud solamente requiere viáticos</span>
+				</div>
+			</div>
+			<md-divider></md-divider>
+			<div flex ng-show="vm.solicitud.fecha_seleccion && vm.usario_es_autorizador && vm.solicitud.autorizada === false">
+				<div flex layout layout-align="start center" layout-padding>
+					<span class="md-subhead">Autorizacion rápida</span>
+				</div>
+				<div flex layout layout-align="start center" layout-padding ng-show="vm.autorizando">
+					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+				</div>
+				<div flex layout layout-align="start center" layout-padding ng-hide="vm.autorizando">
+					<md-button class="md-raised md-warn" ng-click="vm.enviar_autorizacion_rapida( false )">
+						<md-icon md-font-set="material-icons">thumb_down</md-icon>
+						Rechazar
+					</md-button>
+					<md-button class="md-raised md-accent" ng-click="vm.enviar_autorizacion_rapida( true )">
+						<md-icon md-font-set="material-icons">thumb_up</md-icon>
+						Autorizar
+					</md-button>
+				</div>
+			</div>
+			<md-divider></md-divider>
+			<div flex ng-show="vm.solicitud.fecha_compra">
+				<div flex layout layout-align="start center" layout-padding>
+					<span class="md-subhead">Descarga los archivos de compra</span>
+				</div>
+				<div flex layout layout-align="start center" layout-padding ng-hide="vm.autorizando">
+					<md-button class="md-raised md-accent" ng-click="vm.ir_compras()">
+						<md-icon md-font-set="material-icons">file_download</md-icon>
+						Ir a compras
+					</md-button>
+				</div>
+			</div>
+			<md-divider></md-divider>
+			<div flex layout="column" layout-padding layout-align="center start">
+				<p class="md-subhead">Pasos del proceso de solicitud</p>
+				<md-button ng-class="{ 'md-primary': !vm.solicitud.fecha_cotizacion, 'md-accent': vm.solicitud.fecha_cotizacion }" ng-click="vm.ir_cotizacion()">
+					<md-icon md-font-set="material-icons" ng-hide="vm.solicitud.fecha_cotizacion">attach_money</md-icon>
+					<md-icon md-font-set="material-icons" ng-show="vm.solicitud.fecha_cotizacion">check</md-icon>
+					1. Cotización:
+					<span ng-hide="vm.solicitud.fecha_cotizacion">
+						pendiente por {{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}
+					</span>
+					<span ng-show="vm.solicitud.fecha_cotizacion">
+						realizado por {{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}
+						el {{ vm.solicitud.fecha_cotizacion | date:'dd-MMM-yy, h:mm a' }}
+					</span>
+				</md-button>
+				<md-button ng-disabled="!vm.solicitud.fecha_cotizacion" ng-class="{ 'md-primary': !vm.solicitud.fecha_seleccion, 'md-accent': vm.solicitud.fecha_seleccion }" ng-click="vm.ir_seleccion()">
+					<md-icon md-font-set="material-icons" ng-hide="vm.solicitud.fecha_seleccion">touch_app</md-icon>
+					<md-icon md-font-set="material-icons" ng-show="vm.solicitud.fecha_seleccion">check</md-icon>
+					2. Selección de vuelos/hotel:
+					<span ng-hide="vm.solicitud.fecha_seleccion">
+						pendiente por {{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}
+					</span>
+					<span ng-show="vm.solicitud.fecha_seleccion">
+						realizado por {{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}
+						el {{ vm.solicitud.fecha_seleccion | date:'dd-MMM-yy, h:mm a' }}
+					</span>
+				</md-button>
+				<div ng-repeat="autorizacion in vm.solicitud.autorizaciones track by $index">
+					<md-button ng-disabled="!vm.solicitud.fecha_seleccion" style="padding: 0;"
+					ng-class="{ 'md-primary': !autorizacion.fecha_autorizacion, 'md-accent': autorizacion.fecha_autorizacion && autorizacion.solicitud_autorizada,
+					'md-warn': autorizacion.fecha_autorizacion && !autorizacion.solicitud_autorizada }" ng-click="vm.ir_autorizacion()" >
+						<md-icon class="md-accent" md-font-set="material-icons" ng-hide="autorizacion.fecha_autorizacion">thumbs_up_down</md-icon>
+						<md-icon class="md-accent" md-font-set="material-icons" ng-show="autorizacion.fecha_autorizacion && autorizacion.solicitud_autorizada">check</md-icon>
+						<md-icon class="md-accent" md-font-set="material-icons" ng-show="autorizacion.fecha_autorizacion && !autorizacion.solicitud_autorizada">close</md-icon>
+						{{ 3 + $index }}. Autorización:
+						<span ng-hide="autorizacion.fecha_autorizacion">
+							pendiente por {{ autorizacion.nombre + ' ' + autorizacion.apellido }}
+						</span>
+						<span ng-show="autorizacion.fecha_autorizacion">
+							realizado por {{ autorizacion.nombre + ' ' + autorizacion.apellido }}
+							el {{ autorizacion.fecha_autorizacion | date:'dd-MMM-yy, h:mm a' }}
+						</span>
+					</md-button>
+				</div>
+				<md-button ng-class="{ 'md-primary': !vm.solicitud.fecha_compra, 'md-accent': vm.solicitud.fecha_compra }" ng-disabled="vm.solicitud.autorizada === false" ng-click="vm.ir_compras()">
+					<md-icon class="md-accent" md-font-set="material-icons" ng-hide="vm.solicitud.fecha_compra">shopping_cart</md-icon>
+					<md-icon md-font-set="material-icons" ng-show="vm.solicitud.fecha_compra">check</md-icon>
+					{{ vm.solicitud.autorizaciones.length + 3 }}. Registrar compras:
+					<span ng-hide="vm.solicitud.fecha_compra">
+						pendiente por {{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}
+					</span>
+					<span ng-show="vm.solicitud.fecha_compra">
+						realizado por {{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}
+						el {{ vm.solicitud.fecha_compra | date:'dd-MMM-yy, h:mm a' }}
+					</span>
+				</md-button>
+			</div>
+		</md-content>
+	</md-dialog-content>
+</md-dialog>

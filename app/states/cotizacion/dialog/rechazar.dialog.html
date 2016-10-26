@@ -1,0 +1,27 @@
+<md-dialog ng-cloak>
+	<form>
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Rechazar solicitud de viaje</h2>
+        		<span flex></span>
+				<md-button class="md-icon-button" ng-click="vm.cancelarDialogo()">
+					<md-icon md-icon-fonts="material-icons">close</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-dialog-content>
+			<div class="md-dialog-content">
+				<md-input-container flex="100">
+					<label>Razón del rechazo</label>
+					<textarea ng-model="vm.autorizacion.mensaje" maxlength="140" md-maxlength="140"></textarea>
+				</md-input-container>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row">
+			<span flex></span>
+			<md-button class="md-primary" ng-click="vm.contestarDialogo()">
+				Enviar
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

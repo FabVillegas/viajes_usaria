@@ -1,0 +1,15 @@
+<md-dialog ng-cloak>
+	<h2 class="md-title">Autorizar la compra de los pasajes</h2>
+	<md-dialog-content>
+		<md-input-container>
+			<label>Comentarios adicionales</label>
+			<input type="text" ng-model="vm.autorizacion.mensaje" />
+		</md-input-container>
+	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<span flex></span>
+		<md-button class="md-primary" ng-click="vm.contestarDialogo()">
+			Enviar
+		</md-button>
+	</md-dialog-actions>
+</md-dialog>

@@ -1,0 +1,55 @@
+# Turn rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+
+# Solicitudes ------------------------------------------------------------
+RewriteRule ^api/solicitudes/?$ app/restful_api/RestController.php?vista=solicitudes [nc,qsa,L]
+RewriteRule ^api/solicitudes/pendientes/?$ app/restful_api/RestController.php?vista=solicitudes_pendientes [nc,qsa,L]
+RewriteRule ^api/solicitudes/pendientes/([A-Za-z-_@.]+)/?$ app/restful_api/RestController.php?vista=solicitudes_pendientes&correo_usario=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/por_autorizar/?$ app/restful_api/RestController.php?vista=solicitudes_por_autorizar [nc,qsa,L]
+RewriteRule ^api/solicitudes/por_autorizar/([A-Za-z-_@.]+)/?$ app/restful_api/RestController.php?vista=solicitudes_por_autorizar&correo_usario=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/autorizadas/?$ app/restful_api/RestController.php?vista=solicitudes_autorizadas [nc,qsa,L]
+RewriteRule ^api/solicitudes/autorizadas/([A-Za-z-_@.]+)/?$ app/restful_api/RestController.php?vista=solicitudes_autorizadas&correo_usario=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/completas/?$ app/restful_api/RestController.php?vista=solicitudes_completas [nc,qsa,L]
+RewriteRule ^api/solicitudes/completas/([A-Za-z-_@.]+)/?$ app/restful_api/RestController.php?vista=solicitudes_completas&correo_usario=$1 [nc,qsa,L]
+
+# Solicitud individual ----------------------------------------------------
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/?$ app/restful_api/RestController.php?vista=solicitud_individual&id_solicitud=$1 [nc,qsa,L]
+
+
+# Archivos ----------------------------------------------------------------
+RewriteRule ^api/archivos/([A-Za-z0-9-_]+)/?$ app/restful_api/RestController.php?vista=archivos_solicitud&id_archivo=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/archivos/?$ app/restful_api/RestController.php?vista=archivos_solicitud&id_solicitud=$1 [nc,qsa,L]
+
+
+# Opciones hoteles -------------------------------------------------------
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/opciones_hoteles/?$ app/restful_api/RestController.php?vista=opciones_hoteles&id_solicitud=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/opciones_hoteles/([A-Za-z0-9-_]+)/?$ app/restful_api/RestController.php?vista=opcion_hotel_especifica&id_solicitud=$1&id_opcion_hotel=$2 [nc,qsa,L]
+
+# Opciones vuelos
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/opciones_vuelos/?$ app/restful_api/RestController.php?vista=opciones_vuelos&id_solicitud=$1 [nc,qsa,L]
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/opciones_vuelos/([A-Za-z0-9-_]+)/?$ app/restful_api/RestController.php?vista=opcion_vuelo_especifica&id_solicitud=$1&id_opcion_vuelo=$2 [nc,qsa,L]
+
+
+# Vuelos seleccionados ---------------------------------------------------
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/vuelos_seleccionados/?$ app/restful_api/RestController.php?vista=vuelos_seleccionados&id_solicitud=$1 [nc,qsa,L]
+
+
+# Hoteles seleccionados --------------------------------------------------
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/hoteles_seleccionados/?$ app/restful_api/RestController.php?vista=hoteles_seleccionados&id_solicitud=$1 [nc,qsa,L]
+
+
+# Pasos de una solicitud -------------------------------------------------
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/([A-Za-z]+)/?$ app/restful_api/RestController.php?id_solicitud=$1&vista=$2
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/cotizacion/?$ app/restful_api/RestController.php?id_solicitud=$1&vista=cotizacion [nc,qsa,L]
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/seleccion/?$ app/restful_api/RestController.php?id_solicitud=$1&vista=seleccion [nc,qsa,L]
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/autorizacion/([A-Za-z-_@.]+)/?$ app/restful_api/RestController.php?id_solicitud=$1&vista=autorizacion&autorizador=$2
+RewriteRule ^api/solicitudes/([A-Za-z0-9-_]+)/compra/?$ app/restful_api/RestController.php?id_solicitud=$1&vista=compra [nc,qsa,L]
+
+
+# Proyectos ---------------------------------------------------------------
+RewriteRule ^api/proyectos/?$ app/restful_api/RestController.php?vista=proyectos [nc,qsa,L]
+
+
+
+

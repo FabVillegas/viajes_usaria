@@ -1,0 +1,18 @@
+<div ng-controller="loginController as vm">
+	<div layout="column" layout-align="center center" style="height: 100vh" class="login-background">
+		<md-card>
+			<md-card-content>
+				<div flex="100" layout="row" layout-align="center center">
+					<img src="images/logo-usaria.png" style="width: 150px; height: auto">
+				</div>
+				<h1 style="text-align: center">Sistema de viajes</h1>
+				<div layout="row" layout-align="center center">
+					<google-auth-test-button>
+						<md-button ng-click="redirectAuth()" class="md-raised md-accent">Entrar</md-button>
+					</google-auth-test-button>
+					<md-progress-circular class="md-accent" ng-show="vm.procesando" md-mode="indeterminate"></md-progress-circular>
+				</div>
+			</md-card-content>
+		</md-card>
+	</div>
+</div>

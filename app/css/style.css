@@ -1,0 +1,308 @@
+/* Reglas generales */
+html, body{
+	font-family: 'Gotham' !important;
+	background-color: #ECEFF1 !important;
+}
+
+.md-vista{ height: 90vh; background-color: rgba( 0, 0, 0, 0 ) !important; }
+
+.md-barra-menu-contenedor{ height: 10vh; }
+.md-barra-menu{ height: 100%; }
+
+.md-columna-fija{ height: 80vh; overflow: auto; }
+
+md-radio-button.md-usaria-azul-theme[disabled]{ color: rgba( 0,0,0,0.87 ); }
+
+
+
+
+.contenido-vista{
+	height: 92vh;
+	background-color: rgba( 0, 0, 0, 0 ) !important;
+}
+
+.md-gris{
+	color: rgba(0,0,0,0.54);
+}
+
+.fondo-gris{
+  background-color: #ECEFF1  !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.child-view{
+	padding: 0 0 0 0;
+	margin: 0 0 0 0 ;
+	height: 100vh;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+
+.icono-usario{
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	box-sizing: content-box;
+}
+
+.notificacion-texto{
+	background-color: rgba( 0, 0, 0, 0.54 );
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	color: #FFFFFF;
+	border-radius: 2px;
+	text-align: center;
+	line-height: 24px;
+}
+
+.fondo-azul-usaria{
+	background-color: #0097A9;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.md-color-primario{
+	color: #0097A9;
+}
+
+.md-sidenav-left, .md-sidenav-backdrop{
+	position: fixed;
+}
+
+
+
+
+
+/* Constantes */
+
+
+.fondo-blanco{
+	background-color: #FFFFFF;
+}
+
+
+.contenedor-fijo{
+	position: fixed;
+	height: 65vh;
+	width: 30%;
+	left: 5%;
+	margin-top: 2.5%;
+}
+
+/* Ajustes a toolbar */
+.toolbar-secundaria{
+	z-index: 1;
+}
+
+/* Scrollbar */
+md-content.contenido-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+md-content.contenido-scroll::-webkit-scrollbar-thumb:vertical {
+  margin: 5px;
+  background-color: #607D8B;
+  -webkit-border-radius: 2px;
+}
+
+md-content.contenido-scroll::-webkit-scrollbar-button:start:decrement,
+md-content.contenido-scroll::-webkit-scrollbar-button:end:increment {
+  height: 5px;
+  display: block;
+}
+
+@media ( min-width: 600px ) and ( max-width: 959px){
+	.md-card-principal {
+	    top: -5vh;
+	    height: 95vh;
+	}
+}
+
+/********************************/
+
+
+
+
+
+md-radio-button .md-label{
+	width: 98% !important;
+}
+
+.md-prompt-input-container{
+	width: 100%;
+}
+
+.agregar-sombra{
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+}
+
+/*****************/
+
+
+
+
+.readable-text {
+	color: rgba( 0, 0, 0, 0.65 );
+}
+
+label{
+	color: rgba( 0, 0, 0, 0.65 );
+	font-weight: 700;
+}
+
+.add-padding{
+  padding-top: 100px !important;
+}
+
+.no-background{
+  background-color: rgba(0, 0, 0, 0);
+}
+
+
+.login-background{
+	background-image: url( ../images/business-travel.jpg );
+	background-position: center center;
+	background-size: cover;
+}
+
+.add-shadow{
+  box-shadow: 0px 4px 4px #888888;
+}
+
+.disabled-text{
+  color: rgba(0,0,0,0.26);
+  cursor: not-allowed;
+}
+
+.optional-message{
+  color: rgb(0,150,136);
+}
+
+.is-animated {
+  -webkit-transition: 1.5s linear all;
+  -moz-transition:    1.5s linear all;
+  -o-transition:      1.5s linear all;
+  transition:         1.5s linear all;
+}
+
+.animate {
+  -webkit-transition: 1.5s linear all;
+  -moz-transition:    1.5s linear all;
+  -o-transition:      1.5s linear all;
+  transition:         1.5s linear all;
+}
+
+
+
+
+/**************************************
+	Datepicker container
+**************************************/
+
+.datepicker-container {
+	position: relative;
+}
+
+.datepicker-label {
+	font-size: 12px;
+	color: rgba( 0, 0, 0, 0.541176 );
+	position: absolute;
+	bottom: 90%;
+	left: 25px;
+	right: auto;
+}
+
+/* ______________________________________________________________ */
+
+
+.animate-show {
+  height: 51px;
+}
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all linear 0.25s;
+}
+
+.animate-show.ng-hide {
+  height: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@font-face {
+  font-family: 'Gotham';
+  src: url(../fonts/Gotham-Bold.otf);
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url(../fonts/Gotham-Book.otf);
+  font-weight: 400;
+}

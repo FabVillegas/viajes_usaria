@@ -1,0 +1,174 @@
+<div ng-controller="inicioController as vm" md-theme="usaria-azul" ng-cloak>
+	<barra-menu-material sesion="vm.usario" titulo="vm.titulo"></barra-menu-material>
+	<md-content class="md-vista" ng-show="vm.procesando">
+		<div flex layout="column" layout-align="center center" style="height: 75%;">
+			<h1 class="md-display-1" style="text-align: center;">Eliminando solicitud</h1>
+			<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+		</div>
+	</md-content>
+	<md-content class="md-vista" ng-hide="vm.procesando">
+		<div flex layout layout-padding layout-align="start center">
+			<h2 class="md-display-1">Solicitudes</h2>
+			<div>
+				<md-button ui-sref="solicitud" class="md-raised md-accent">
+					<md-icon md-font-set="material-icons">add</md-icon>
+					<span hide-xs>Crea una nueva</span>
+				</md-button>
+			</div>
+		</div>
+		<div flex layout layout-padding layout-wrap ng-show="vm.usario.privilegio !== 2">
+			<div flex="25" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'en_proceso' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_en_proceso, 'en_proceso' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'en_proceso' }">
+						{{ vm.solicitudes_en_proceso.length }}
+					</div>
+					pendiente<span ng-hide="vm.solicitudes_en_proceso.length === 1">s</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'por_autorizar' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_por_autorizar, 'por_autorizar' )">
+					<div class="notificacion-texto"
+					ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'por_autorizar' }">
+						{{ vm.solicitudes_por_autorizar.length }}
+					</div>
+					<span style="white-space:nowrap;">por autorizar</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'autorizadas' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_autorizadas, 'autorizadas' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'autorizadas' }">
+						{{ vm.solicitudes_autorizadas.length }}
+					</div>
+					<span style="word-wrap: break-word;">autorizadas por mí</span>
+				</md-button>
+			</div>
+			<div flex="25" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'completadas' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_completadas, 'completadas' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'completadas' }">
+						{{ vm.solicitudes_completadas.length }}
+					</div>
+					completas
+				</md-button>
+			</div>
+		</div>
+		<div flex layout layout-padding layout-wrap ng-show="vm.usario.privilegio === 2">
+			<div flex="20" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'equipo_usaria' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_equipo_usaria, 'equipo_usaria' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'equipo_usaria' }">
+						{{ vm.solicitudes_equipo_usaria.length }}
+					</div>
+					Equipo usaria
+				</md-button>
+			</div>
+			<div flex="20" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'en_proceso' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_en_proceso, 'en_proceso' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'en_proceso' }">
+						{{ vm.solicitudes_en_proceso.length }}
+					</div>
+					pendiente<span ng-hide="vm.solicitudes_en_proceso.length === 1">s</span>
+				</md-button>
+			</div>
+			<div flex="20" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'por_autorizar' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_por_autorizar, 'por_autorizar' )">
+					<div class="notificacion-texto"
+					ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'por_autorizar' }">
+						{{ vm.solicitudes_por_autorizar.length }}
+					</div>
+					<span style="white-space:nowrap;">por autorizar</span>
+				</md-button>
+			</div>
+			<div flex="20" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'autorizadas' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_autorizadas, 'autorizadas' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'autorizadas' }">
+						{{ vm.solicitudes_autorizadas.length }}
+					</div>
+					<span style="word-wrap: break-word;">autorizadas por mí</span>
+				</md-button>
+			</div>
+			<div flex="20" flex-xs="50" layout layout-align="start center">
+				<md-button ng-class="{ 'md-primary': vm.solicitudes_seleccionadas === 'completadas' }"
+				ng-click="vm.mostrar_solicitudes( vm.solicitudes_completadas, 'completadas' )">
+					<div class="notificacion-texto" ng-class="{ 'fondo-azul-usaria': vm.solicitudes_seleccionadas === 'completadas' }">
+						{{ vm.solicitudes_completadas.length }}
+					</div>
+					completas
+				</md-button>
+			</div>
+		</div>
+		<div flex layout layout-padding>
+			<md-content flex ng-cloak>
+				<section>
+					<md-list>
+						<md-list-item class="md-3-line" ng-repeat="solicitud in vm.solicitudes" ng-click="vm.ver_detalle( solicitud, $event )">
+							<div class="md-list-item-text" layout layout-align="start center" layout-padding layout-wrap>
+								<div flex="20" flex-sm="50" flex-xs="100">
+									<p>Creación</p>
+									<h3>{{ solicitud.fecha_creacion | date:'dd-MMM-yy, h:mm a' }}</h3>
+								</div>
+								<div flex="80" flex-sm="50" flex-xs="100">
+									<p>Viajero</p>
+									<h3>{{ solicitud.nombre_viajero + ' ' + solicitud.apellido_viajero }}</h3>
+								</div>
+								<div flex="50" flex-sm="50" flex-xs="100">
+									<p>Destinos</p>
+									<div flex layout layout-align="start center" layout-wrap>
+										<h3 flex="100" ng-repeat="ciudad in solicitud.ciudades_destino track by $index">
+											{{ ciudad.nombre }}
+										</h3>
+									</div>
+									<div flex layout layout-align="start center" layout-wrap ng-show="solicitud.ciudades_destino.length === 0">
+										<h3 flex="100" ng-repeat="hotel in solicitud.hoteles_solicitados track by $index">
+											{{ hotel.ciudad }}
+										</h3>
+									</div>
+									<div flex layout layout-align="start center" layout-wrap ng-show="solicitud.hoteles_solicitados.length === 0">
+										<h3 flex="100" ng-repeat="vuelo in solicitud.vuelos_solicitados track by $index">
+											{{ vuelo.destino }}
+										</h3>
+									</div>
+								</div>
+								<div flex="15" flex-xs="50">
+									<p>Inicio viaje</p>
+									<h3>{{ solicitud.fecha_inicio | date:'dd-MMM-yy' }}</h3>
+								</div>
+								<div flex="15" flex-xs="50">
+									<p>Fin viaje</p>
+									<h3>{{ solicitud.fecha_fin | date:'dd-MMM-yy' }}</h3>
+								</div>
+								<div flex="20" flex-xs="100">
+									<p>Paso pendiente</p>									
+									<h3>
+										<span ng-show="solicitud.paso === 1">
+											Cotizar
+										</span>
+										<span ng-show="solicitud.paso === 2">
+											Seleccionar
+										</span>
+										<span ng-show="solicitud.paso === 3">
+											Autorizar
+										</span>
+										<span ng-show="solicitud.paso === 4 && !solicitud.fecha_compra">
+											Comprar
+										</span>
+										<span ng-show="solicitud.paso === 4 && solicitud.fecha_compra">
+											Descargar
+										</span>
+									</h3>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</section>
+			</md-content>
+		</div>
+	</md-content>
+</div>

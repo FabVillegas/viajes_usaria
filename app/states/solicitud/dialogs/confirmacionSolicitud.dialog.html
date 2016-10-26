@@ -1,0 +1,26 @@
+<md-dialog ng-cloak>
+	<form>
+		<md-dialog-content layout="column" layout-padding>
+			<div flex layout layout-align="space-between">
+				<h2 class="md-title">¿Enviar solicitud de viaje para cotización?</h2>
+				<md-button class="md-icon-button" ng-click="vm.cancelarDialogo()">
+					<md-icon md-icon-fonts="material-icons">close</md-icon>
+				</md-button>
+			</div>
+			<div flex class="md-dialog-content-body">
+				<p>
+					La solicitud de viaje será almacenada y se empezará a cotizar. Se notificará mediante correo a tu líder y al asistente de administración.
+				</p>
+				<p>
+					No es necesario que hagas otro paso, solo esperar a que te respondan.
+				</p>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row">
+			<span flex></span>
+			<md-button class="md-primary" ng-click="vm.confirmarDialogo()">
+				Estoy seguro, quiero enviarla
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

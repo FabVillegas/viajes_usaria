@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="viajesUsaria">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.4.6/angular-locale_es-mx.js; child-src 'none'">
+		<title>Viajes Usaria</title>
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<!-- build:css css/main.css -->
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
+		<link rel="stylesheet" type="text/css" href="../bower_components/angular-material/layouts/angular-material.layouts.css">
+		<link rel="stylesheet" type="text/css" href="../bower_components/angular-material/layouts/angular-material.layout-attributes.css">
+		<!-- endbuild -->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	</head>
+	<body>
+		<div id="ui-view" ui-view></div>
+		<!-- build:js js/vendor.js -->
+		<script src="../bower_components/moment/moment.js"></script>
+		<script src="../bower_components/moment/locale/es.js"></script>
+		<script src="../bower_components/file-saver/FileSaver.js"></script>
+		<script src="../bower_components/angular/angular.js"></script>
+		<script src="../bower_components/angular-messages/angular-messages.js"></script>
+		<script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="../bower_components/angular-animate/angular-animate.js"></script>
+		<script src="../bower_components/angular-aria/angular-aria.js"></script>
+		<script src="../bower_components/angular-material/angular-material.js"></script>
+		<script src="../bower_components/ng-file-upload/ng-file-upload.js"></script>
+		<script src="../bower_components/angular-cookie/angular-cookie.js"></script>
+		<!-- endbuild -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.4.6/angular-locale_es-mx.js"></script>
+		<!-- build:js js/app.js -->
+		<script src="app.js"></script>
+		<script src="ng_components/directives/ngEnter.js"></script>
+		<script src="ng_components/directives/google-auth/google-auth.js"></script>
+		<script src="ng_components/directives/barra_menu_material/barra-menu-material.js"></script>		
+		<script src="ng_components/services/solicitud.service.js"></script>
+		<script src="ng_components/services/usario.service.js"></script>
+		<script src="ng_components/services/archivo.service.js"></script>
+		<script src="ng_components/factories/autocompletado.factory.js"></script>
+		<script src="states/layout/layout.controller.js"></script>
+		<script src="states/login/login.controller.js"></script>
+		<script src="states/inicio/inicio.controller.js"></script>
+		<script src="states/solicitud/solicitud.controller.js"></script>
+		<script src="states/cotizacion/cotizacion.controller.js"></script>
+		<script src="states/seleccion/seleccion.controller.js"></script>
+		<script src="states/autorizacion/autorizacion.controller.js"></script>
+		<script src="states/compras/compras.controller.js"></script>
+		<!-- endbuild -->
+	</body>
+</html>

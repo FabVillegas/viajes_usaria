@@ -1,0 +1,254 @@
+<div ng-controller="comprasController as vm" md-theme="usaria-azul" ng-cloak>
+	<barra-menu-material sesion="vm.usario" titulo="vm.titulo"></barra-menu-material>
+	<md-content class="md-vista" ng-show="vm.procesando">
+		<div flex layout="column" layout-align="center center" style="height: 75%;">
+			<h1 class="md-display-1" style="text-align: center;">Enviando correo de compra</h1>
+			<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+		</div>
+	</md-content>
+	<md-content class="md-vista" ng-hide="vm.procesando">
+		<div flex layout>
+			<div flex="50" layout-margin class="md-columna-fija">
+				<md-content flex ng-show="vm.usario.privilegio === 2">
+					<md-subheader class="md-secondary md-no-sticky">
+						<div layout layout-align="start center">
+							<span>
+								<md-icon md-font-set="material-icons">person</md-icon>
+								Viajero
+							</span>
+						</div>
+					</md-subheader>
+					<md-list>
+						<md-list-item class="md-3-line">
+							<div flex layout layout-align="start center" layout-padding>
+								<div layout="column" class="md-list-item-text">
+									<p>Usario</p>
+									<h4>{{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}</h4>
+								</div>
+								<div layout="column" class="md-list-item-text">
+									<p>Fechas</p>
+									<h4>{{ vm.solicitud.fecha_inicio | date:"dd-MMM-yy" }} al {{ vm.solicitud.fecha_fin | date:"dd-MMM-yy" }}</h4>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+				<md-content flex ng-show="vm.usario.privilegio === 2">
+					<md-subheader class="md-secondary md-no-sticky">
+						<div layout layout-align="start center">
+							<span>
+								<md-icon md-font-set="material-icons">thumb_up</md-icon>
+								Autorizaciones
+							</span>
+						</div>
+					</md-subheader>
+					<md-list>
+						<md-list-item class="md-3-line" ng-repeat="autorizacion in vm.solicitud.autorizaciones">
+							<div flex layout layout-align="start center" layout-padding>
+								<div layout="column" class="md-list-item-text">
+									<p>Usario</p>
+									<h4>{{ autorizacion.nombre + ' ' + autorizacion.apellido }}</h4>
+								</div>
+								<div layout="column" class="md-list-item-text" ng-show="autorizacion.mensaje">
+									<p>Mensaje</p>
+									<h4>{{ autorizacion.mensaje }}</h4>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+				<md-content flex>
+					<md-subheader class="md-secondary md-no-sticky">
+						<div layout layout-align="start center">
+							<span>
+								<md-icon md-font-set="material-icons">flight</md-icon>
+								Vuelos
+							</span>
+						</div>
+					</md-subheader>
+					<md-list>
+						<md-list-item class="md-3-line" ng-repeat="vuelo in vm.solicitud.vuelos_seleccionados | orderBy:'fecha_salida'">
+							<div flex layout layout-align="start center" layout-wrap layout-padding>
+								<div flex flex-md="30" flex-xs="50">
+									<div layout="column" class="md-list-item-text">
+										<h4>Aerolínea</h4>
+										<p>{{ vuelo.aerolinea }}</p>
+									</div>
+								</div>
+								<div flex flex-md="30" flex-xs="50">
+									<div layout="column" class="md-list-item-text">
+										<h4>Fecha</h4>
+										<p>{{ vuelo.fecha_salida | date:'dd MMM yyyy' }}</p>
+									</div>
+								</div>
+								<div flex flex-md="30" flex-xs="50">
+									<div layout="column" class="md-list-item-text">
+										<h4>Monto cotizado</h4>
+										<p>{{ vuelo.costo | currency }}</p>
+									</div>
+								</div>
+								<div flex="40" flex-md="100" flex-xs="100">
+									<div layout layout-align="start center" class="md-list-item-text">
+										<p>
+											{{ vuelo.hora_salida }}
+											{{ vuelo.origen }}
+										</p>
+										<span>
+											<md-icon md-font-set="material-icons">arrow_forward</md-icon>
+										</span>
+										<p>
+											{{ vuelo.hora_llegada }}
+											{{ vuelo.destino }}
+										</p>
+									</div>
+								</div>
+								<div flex="100" ng-show="vuelo.comentarios">
+									<div layout="column" class="md-list-item-text">
+										<h4>Comentarios</h4>
+										<p>{{ vuelo.comentarios }}</p>
+									</div>
+								</div>
+								<div flex="100" layout layout-align="end center">
+									<md-button class="md-icon-button" ng-click="vm.editarInfoVuelo( vuelo, $event )">
+										<md-tooltip md-direction="top">Editar información del vuelo</md-tooltip>
+										<md-icon md-font-set="material-icons">edit</md-icon>
+									</md-button>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+				<md-content flex>
+					<md-subheader class="md-secondary md-no-sticky">
+						<div layout layout-align="start center">
+							<span>
+								<md-icon md-font-set="material-icons">hotel</md-icon>
+								Hoteles
+							</span>
+						</div>
+					</md-subheader>
+					<md-list>
+						<md-list-item class="md-3-line" ng-repeat="hotel in vm.solicitud.hoteles_seleccionados">
+							<div flex layout layout-align="start center" layout-padding layout-wrap>
+								<div flex flex-xs="50">
+									<div layout="column" class="md-list-item-text">
+										<h4>Nombre</h4>
+										<p>{{ hotel.nombre }}</p>
+									</div>
+								</div>
+								<div flex flex-xs="50">
+									<div layout="column" class="md-list-item-text">
+										<h4>Costo</h4>
+										<p>{{ hotel.costo | currency }}</p>
+									</div>
+								</div>
+								<div flex="40" flex-xs="100">
+									<div layout="column" class="md-list-item-text">
+										<h4>Sitio web</h4>
+										<p>{{ hotel.sitioweb }}</p>
+									</div>
+								</div>
+								<div flex="100" flex-xs="100">
+									<div layout="column" class="md-list-item-text">
+										<h4>Dirección</h4>
+										<p>{{ hotel.direccion }}</p>
+									</div>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+			</div>
+			<div flex="50" layout-margin class="md-columna-fija">
+				<md-content>
+					<md-subheader class="md-secondary md-no-sticky">
+						<div layout layout-align="start center">
+							<span>
+								<md-icon md-font-set="material-icons">folder</md-icon>
+								Archivos de reservación y compra
+							</span>
+							<span flex></span>
+							<md-button class="md-icon-button" ng-click="vm.habilitarControlesArchivos()" ng-show="vm.usario.privilegio === 2">
+								<md-tooltip md-direction="top">Editar archivos</md-tooltip>
+								<md-icon md-font-set="material-icons" ng-show="!vm.edicionArchivos">edit</md-icon>
+								<md-icon md-font-set="material-icons" ng-show="vm.edicionArchivos">cancel</md-icon>
+							</md-button>
+						</div>
+					</md-subheader>
+					<div flex layout layout-align="start center" layout-margin ng-show="vm.usario.privilegio === 2">
+						<md-input-container flex="60">
+							<label>Descripción de archivo</label>
+							<md-select ng-model="vm.descripcion_archivo">
+								<md-option value="Boleto electrónico de vuelo">Boleto electrónico de vuelo</md-option>
+								<md-option value="Comprobante de reservación de hotel">Comprobante de reservación de hotel</md-option>
+								<md-option value="Comprobante de viáticos">Comprobante de viáticos</md-option>
+								<md-option value="Boleto de taxi">Boleto de taxi</md-option>
+								<md-option value="Boleto de autobús">Boleto de autobús</md-option>
+								<md-option value="Otros">Otros</md-option>
+							</md-select>
+						</md-input-container>
+						<md-button ng-click="vm.activar_boton_file()" class="md-primary md-icon-button">
+							<md-tooltip md-direction="top">Adjuntar archivo</md-tooltip>
+							<md-icon md-font-set="material-icons">attach_file</md-icon>
+						</md-button>
+						<button ng-show="false" id="boton-file" type="file" ngf-select="vm.subir_archivo( $file, $invalidFiles )" accept=".pdf, .xml, image/*" ngf-max-size="10MB">
+							Select File
+						</button>
+					</div>
+					<md-list>
+						<md-list-item class="md-3-line" ng-repeat="archivo in vm.solicitud.archivos_compra">
+							<div flex layout layout-align="start center" layout-padding layout-wrap>
+								<div flex="20" flex-md="25" flex-xs="50" layout layout-align="start center" layout-padding>
+									<div class="md-list-item-text">
+										<h4>
+											<span ng-show="archivo.tipo === 'application/pdf'">
+												<md-icon md-font-set="material-icons" class="md-warn">picture_as_pdf</md-icon>
+												PDF
+											</span>
+											<span ng-show="archivo.tipo === 'image/jpeg' || archivo.tipo === 'image/png'">
+												<md-icon md-font-set="material-icons" class="md-accent">photo</md-icon>
+												<span ng-show="archivo.tipo === 'image/jpeg'">JPG</span>
+												<span ng-show="archivo.tipo === 'image/png'">PNG</span>
+											</span>
+											<span ng-show="archivo.tipo === 'text/xml'">
+												<md-icon md-font-set="material-icons" class="md-primary">code</md-icon>
+												XML
+											</span>
+										</h4>
+									</div>
+								</div>
+								<div flex="50" flex-md="45" flex-xs="100" layout layout-align="start center">
+									<div class="md-list-item-text">
+										<p>{{ archivo.descripcion }}</p>
+									</div>
+								</div>
+								<div flex layout layout-align="end center">
+									<md-button class="md-warn md-icon-button" ng-click="vm.eliminarArchivo( archivo )" ng-show="vm.edicionArchivos">
+										<md-tooltip md-direction="top">Eliminar archivo</md-tooltip>
+										<md-icon md-font-set="material-icons">delete</md-icon>
+									</md-button>
+									<md-button class="md-raised" ng-click="vm.descargar_archivo( archivo )" ng-show="!vm.edicionArchivos">
+										<md-icon md-font-set="material-icons">file_download</md-icon>
+										<span hide-xs hide-md>Descargar</span>
+									</md-button>
+									<a ng-show="false" id="{{ archivo.id }}" href="restful_api/descargar.archivo_compra.script.php?usaria_token={{ vm.usaria_token }}&id_archivo={{archivo.id}}">Download</a>
+								</div>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+			</div>
+		</div>
+		<div flex layout layout-align="end center" ng-show="vm.usario.privilegio === 2">
+			<md-button class="md-accent md-raised" ng-click="vm.enviar_compra( $event )">
+				<md-icon md-font-set="material-icons">send</md-icon>
+				Enviar compra
+			</md-button>
+		</div>
+	</md-content>
+</div>

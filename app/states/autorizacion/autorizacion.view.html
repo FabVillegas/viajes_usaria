@@ -1,0 +1,283 @@
+<div ng-controller="autorizacionController as vm" md-theme="usaria-morado" ng-cloak>
+	<barra-menu-material sesion="vm.usario" titulo="vm.titulo"></barra-menu-material>
+	<md-content class="md-vista" ng-show="vm.procesando">
+		<div flex layout="column" layout-align="center center" style="height: 75%;">
+			<h1 class="md-display-1" style="text-align: center;">Enviando correo de selección</h1>
+			<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+		</div>
+	</md-content>
+	<md-content class="md-vista" ng-hide="vm.procesando">
+		<div flex layout="column" layout-align="center start" layout-padding>
+			<md-subheader class="md-no-sticky fondo-gris" ng-repeat="autorizacion in vm.solicitud.autorizaciones"
+			ng-class="{ 'md-accent': autorizacion.solicitud_autorizada,
+			'md-warn': !autorizacion.solicitud_autorizada }">
+				<div class="md-title" ng-show="autorizacion.fecha_autorizacion">
+					<md-icon md-font-set="material-icons" class="md-accent" ng-show="autorizacion.solicitud_autorizada">thumb_up</md-icon>
+					<span ng-show="autorizacion.solicitud_autorizada">Solicitud autorizada</span>
+					<md-icon md-font-set="material-icons" class="md-warn" ng-show="!autorizacion.solicitud_autorizada">thumb_down</md-icon>
+					<span ng-show="!autorizacion.solicitud_autorizada">Solicitud rechazada</span>
+					por {{ autorizacion.nombre + " " + autorizacion.apellido }}
+					el {{ autorizacion.fecha_autorizacion | date:"dd-MMM-yy, h:mm a" }}
+				</div>
+				<div class="md-title" ng-hide="autorizacion.fecha_autorizacion">
+					<md-icon md-font-set="material-icons" class="md-warn">thumbs_up_down</md-icon>
+					Autorización pendiente por {{ autorizacion.nombre + " " + autorizacion.apellido }}
+				</div>
+			</md-subheader>
+		</div>
+		<div flex layout="column" layout-padding ng-show="vm.solicitud.necesita_cotizacion === false">
+			<span class="md-title">{{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }} necesita solamente viáticos para su viaje.</span>
+			<span class="md-title">Fechas: {{ vm.solicitud.fecha_inicio | date:"dd-MMM-yy" }} al {{ vm.solicitud.fecha_fin | date:"dd-MMM-yy" }}</span>
+			<span class="md-title">Lugar:</span>
+			<span class="md-title" ng-repeat="ciudad in vm.solicitud.ciudades_destino">{{ ciudad.nombre }}</span>
+		</div>
+		<div layout-padding ng-show="vm.solicitud.vuelos_solicitados.length > 0">
+			<div flex>
+				<md-subheader class="md-no-sticky md-primary fondo-gris">
+					<md-icon md-font-set="material-icons" class="md-primary">flight</md-icon>
+					Vuelos
+				</md-subheader>
+			</div>
+			<div flex ng-repeat="vuelo in vm.solicitud.vuelos_solicitados track by $index" ng-style="{ 'color': vuelo.opciones.length === 0 && 'red'  }">
+				<section style="margin-bottom: 10px;" layout layout-align="start center">
+					<div flex layout layout-align="start center">
+						<div flex="25" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">flight_takeoff</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Origen</span>
+								<span class="md-body-1">{{ vuelo.origen }}</span>
+							</div>
+						</div>
+						<div flex="25" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">flight_land</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Destino</span>
+								<span class="md-body-1">{{ vuelo.destino }}</span>
+							</div>
+						</div>
+						<div flex="25" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">event</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Salida</span>
+								<span class="md-body-1">{{ vuelo.fecha | date:"dd-MMM-yy" }}</span>
+							</div>
+						</div>
+						<div flex="25" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">schedule</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Rango de horas</span>
+								<span class="md-body-1">{{ vuelo.horario_origen }}</span>
+							</div>
+						</div>
+					</div>
+					<div flex="10" layout layout-align="end center">
+						<md-button class="md-primary md-icon-button" ng-click="vm.desplegar_contenido( vuelo )">
+							<md-tooltip md-direction="top">
+								<span ng-hide="vuelo.mostrar">Mostrar</span>
+								<span ng-show="vuelo.mostrar">Ocultar</span>
+							</md-tooltip>
+							<md-icon md-font-set="material-icons" ng-hide="vuelo.mostrar">keyboard_arrow_down</md-icon>
+							<md-icon md-font-set="material-icons" ng-show="vuelo.mostrar">keyboard_arrow_up</md-icon>
+						</md-button>
+					</div>
+				</section>
+                <md-content layout-padding style="margin-bottom: 10px;" layout layout-align="start center" ng-show="vm.vuelos_seleccionados[ $index ] && vuelo.mostrar === false">
+					<div flex layout layout-align="start center" layout-wrap>
+                        <div flex="100" layout="column">
+                            <span class="md-subhead">Vuelo seleccionado</span>
+                        </div>                        
+                        <div flex="20" layout="column">
+                            <span class="md-caption md-gris">Aerolínea</span>
+                            <p>{{ vm.vuelos_seleccionados[ $index ].aerolinea }}</p>
+                        </div>
+                        <div flex="20" layout="column">
+                            <span class="md-caption md-gris">Costo</span>
+                            <p>{{ vm.vuelos_seleccionados[ $index ].costo | currency }}</p>
+                        </div>
+                        <div flex="30" layout="column">
+                            <span class="md-caption md-gris">Traslado</span>
+                            <div flex layout layout-align="start center" layout>
+                                <p>
+                                    {{ vm.vuelos_seleccionados[ $index ].origen }}<br>{{ vm.vuelos_seleccionados[ $index ].fecha_salida | date:"dd-MMM-yy" }}<br>{{ vm.vuelos_seleccionados[ $index ].hora_salida }}
+                                </p>
+                                <span style="margin: 0 5px 0 5px;"><md-icon md-font-set="material-icons">arrow_forward</md-icon></span>
+                                <p>
+                                    {{ vm.vuelos_seleccionados[ $index ].destino }}<br>{{ vm.vuelos_seleccionados[ $index ].fecha_llegada | date:"dd-MMM-yy" }}<br>{{ vm.vuelos_seleccionados[ $index ].hora_llegada }}
+                                </p>
+                                <span style="margin-left: 20px;">Escalas: {{ vm.vuelos_seleccionados[ $index ].escalas }}</span>
+                            </div>
+                        </div>
+                        <div flex="30" layout="column" ng-show="vm.vuelos_seleccionados[ $index ].comentarios">
+                            <span class="md-caption md-gris">Comentarios</span>
+                            <p>{{ vm.vuelos_seleccionados[ $index ].comentarios }}</p>
+                        </div>
+                    </div>
+				</md-content>
+				<md-content id="{{ vuelo.id }}" ng-show="vuelo.mostrar">
+                    <md-radio-group ng-model="vm.vuelos_seleccionados[ $index ]" ng-change="vm.verificar_seleccion_completa()" layout-margin>
+                        <md-radio-button flex="90" ng-repeat="opcion in vuelo.opciones track by $index" ng-value="opcion" ng-disabled="true" class="md-accent">
+                            <div flex layout layout-align="start center" layout-wrap>
+                                <div flex="20" layout="column">
+                                    <span class="md-caption md-gris">Aerolínea</span>
+                                    <p>{{ opcion.aerolinea }}</p>
+                                </div>
+                                <div flex="20" layout="column">
+                                    <span class="md-caption md-gris">Costo</span>
+                                    <p>{{ opcion.costo | currency }}</p>
+                                </div>
+								<div flex="30" layout="column">
+									<span class="md-caption md-gris">Traslado</span>
+									<div flex layout layout-align="start center" layout>
+										<p>
+											{{ opcion.origen }}<br>{{ opcion.fecha_salida | date:"dd-MMM-yy" }}<br>{{ opcion.hora_salida }}
+										</p>
+										<span style="margin: 0 5px 0 5px;"><md-icon md-font-set="material-icons">arrow_forward</md-icon></span>
+										<p>
+											{{ opcion.destino }}<br>{{ opcion.fecha_llegada | date:"dd-MMM-yy" }}<br>{{ opcion.hora_llegada }}
+										</p>
+										<span style="margin-left: 20px;">Escalas: {{ opcion.escalas }}</span>
+									</div>
+								</div>
+								<div flex="30" layout="column" ng-show="opcion.comentarios">
+									<span class="md-caption md-gris">Comentarios</span>
+									<p>{{ opcion.comentarios }}</p>
+								</div>
+                            </div>
+                            <md-divider></md-divider>
+                        </md-radio-button>
+                    </md-radio-group>
+                    <div flex="100" layout layout-align="end center">
+                        <md-button class="md-primary md-icon-button" ng-click="vm.desplegar_contenido( vuelo )">
+                            <md-tooltip md-direction="top">
+                                <span ng-show="vuelo.mostrar">Ocultar</span>
+                            </md-tooltip>
+                            <md-icon md-font-set="material-icons" ng-show="vuelo.mostrar">keyboard_arrow_up</md-icon>
+                        </md-button>
+                    </div>
+				</md-content>
+				<md-divider style="margin: 10px 0 10px 0;"></md-divider>
+			</div>
+		</div>
+		<div layout-padding ng-show="vm.solicitud.hoteles_solicitados.length > 0">
+			<div flex>
+				<md-subheader class="md-no-sticky md-primary fondo-gris">
+					<md-icon md-font-set="material-icons" class="md-primary">hotel</md-icon>
+					Hoteles
+				</md-subheader>
+			</div>
+			<div flex ng-repeat="hotel in vm.solicitud.hoteles_solicitados track by $index" ng-style="{ 'color': hotel.opciones.length === 0 && 'red'  }">
+				<section style="margin-bottom: 10px;" layout layout-align="start center">
+					<div flex layout layout-align="start center">
+						<div flex="25" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">place</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Locación</span>
+								<span class="md-body-1">{{ hotel.ciudad }}</span>
+							</div>
+						</div>
+						<div flex="10" layout layout-align="start center">
+							<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">brightness_2</md-icon></span>
+							<div flex layout="column" layout-align="center start">
+								<span class="md-caption md-gris">Noches</span>
+								<span class="md-body-1">{{ hotel.numero_noches }}</span>
+							</div>
+						</div>
+						<div flex="65" layout layout-align="start center">
+							<div ng-show="hotel.direccion" layout layout-align="start center">
+								<span style="margin-right: 5px;"><md-icon md-font-set="material-icons">directions</md-icon></span>
+								<div flex layout="column" layout-align="center start">
+									<span class="md-caption md-gris">Dirección</span>
+									<span class="md-body-1">{{ hotel.direccion }}</span>
+								</div>
+							</div>
+							<div ng-show="hotel.web">
+								<md-button href="{{ hotel.web }}" target="_blank" class="md-primary">
+									<md-icon md-font-set="material-icons">link</md-icon>
+									Ver Mapa de google incluido
+								</md-button>
+							</div>
+						</div>
+					</div>
+					<div flex="10" layout layout-align="end center">
+						<md-button class="md-primary md-icon-button" ng-click="vm.desplegar_contenido( hotel )">
+							<md-tooltip md-direction="top">
+								<span ng-hide="hotel.mostrar">Mostrar</span>
+								<span ng-show="hotel.mostrar">Ocultar</span>
+							</md-tooltip>
+							<md-icon md-font-set="material-icons" ng-hide="hotel.mostrar">keyboard_arrow_down</md-icon>
+							<md-icon md-font-set="material-icons" ng-show="hotel.mostrar">keyboard_arrow_up</md-icon>
+						</md-button>
+					</div>
+				</section>
+                <md-content layout-padding style="margin-bottom: 10px;" layout layout-align="start center" ng-show="vm.hoteles_seleccionados[ $index ] && hotel.mostrar === false">
+					<div flex layout layout-align="start center" layout-wrap>
+                         <div flex="100" layout="column">
+                            <span class="md-subhead">Hotel seleccionado</span>
+                        </div>  
+                        <div flex="20" layout="column">
+                            <span class="md-caption md-gris">Nombre</span>
+                            <p>{{ vm.hoteles_seleccionados[ $index ].nombre }}</p>
+                        </div>
+                        <div flex="30" layout="column">
+                            <span class="md-caption md-gris">Dirección</span>
+                            <p>{{ vm.hoteles_seleccionados[ $index ].direccion }}</p>
+                        </div>
+                        <div flex="15" layout="column">
+                            <span class="md-caption md-gris">Costo</span>
+                            <p>{{ vm.hoteles_seleccionados[ $index ].costo | currency }}</p>
+                        </div>
+                        <div flex="25" layout="column" ng-show="vm.hoteles_seleccionados[ $index ].sitioweb">
+                            <span class="md-caption md-gris">Sitio web</span>
+                            <p>{{ vm.hoteles_seleccionados[ $index ].sitioweb }}</p>
+                        </div>
+                    </div>
+				</md-content>
+				<md-content id="{{ hotel.id }}" ng-show="hotel.mostrar">
+                    <md-radio-group ng-model="vm.hoteles_seleccionados[ $index ]" ng-change="vm.verificar_seleccion_completa()" layout-margin>
+                        <md-radio-button flex="90" ng-repeat="opcion in hotel.opciones track by $index" ng-value="opcion" ng-disabled="true" class="md-accent">
+                            <div flex layout layout-align="start center" layout-wrap>
+                                <div flex="20" layout="column">
+									<span class="md-caption md-gris">Nombre</span>
+									<p>{{ opcion.nombre }}</p>
+								</div>
+								<div flex="30" layout="column">
+									<span class="md-caption md-gris">Dirección</span>
+									<p>{{ opcion.direccion }}</p>
+								</div>
+								<div flex="15" layout="column">
+									<span class="md-caption md-gris">Costo</span>
+									<p>{{ opcion.costo | currency }}</p>
+								</div>
+								<div flex="25" layout="column" ng-show="opcion.sitioweb">
+									<span class="md-caption md-gris">Sitio web</span>
+									<p>{{ opcion.sitioweb }}</p>
+								</div>
+								<span flex="25" ng-hide="opcion.sitioweb"></span>
+                            </div>
+							<md-divider></md-divider>                            
+                        </md-radio-button>
+                    </md-radio-group>
+                     <div flex="100" layout layout-align="end center">
+                        <md-button class="md-primary md-icon-button" ng-click="vm.desplegar_contenido( hotel )">
+                            <md-tooltip md-direction="top">
+                                <span ng-show="hotel.mostrar">Ocultar</span>
+                            </md-tooltip>
+                            <md-icon md-font-set="material-icons" ng-show="hotel.mostrar">keyboard_arrow_up</md-icon>
+                        </md-button>
+                    </div>
+				</md-content>
+				<md-divider style="margin: 10px 0 10px 0;"></md-divider>
+			</div>
+		</div>
+		<div flex layout layout-align="end center" layout-margin ng-show="vm.vista_lista">
+			<md-button class="md-warn md-raised" ng-click="vm.enviar_autorizacion( false, $event )">
+				<md-icon md-font-set="material-icons">thumb_down</md-icon>
+				Rechazar
+			</md-button>
+			<md-button class="md-accent md-raised" ng-click="vm.enviar_autorizacion( true, $event )">
+				<md-icon md-font-set="material-icons">thumb_up</md-icon>
+				Autorizar
+			</md-button>
+		</div>
+	</md-content>
+</div>

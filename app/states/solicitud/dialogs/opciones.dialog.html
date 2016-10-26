@@ -1,0 +1,124 @@
+<md-dialog flex-gt-md="90" ng-cloak>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>¿Qué es lo que necesitas?</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="vm.cerrarDialogo()">
+				<md-tooltip md-direction="top">Cerrar detalle</md-tooltip>
+				<md-icon md-font-set="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<md-dialog-content>
+		<md-content>
+			<div flex layout layout-padding>
+				<div flex layout layout-align="start center">
+					<span><md-icon md-font-set="material-icons">person</md-icon></span>
+					<p class="md-body-1">{{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}</p>
+				</div>
+				<div flex layout layout-align="start center">
+					<span><md-icon md-font-set="material-icons">date_range</md-icon></span>
+					<p class="md-body-1">{{ vm.solicitud.fecha_inicio | date:'dd MMMM yyyy' }} al {{ vm.solicitud.fecha_fin | date:'dd MMMM yyyy' }}</p>
+				</div>
+				<div flex layout layout-align="start center">
+					<span><md-icon md-font-set="material-icons">class</md-icon></span>
+					<p class="md-body-1">
+						{{ vm.solicitud.nombre_proyecto }} <br>
+						{{ vm.solicitud.descripcion_otros }}
+					</p>
+				</div>
+				<div flex layout layout-align="start center">
+					<span><md-icon md-font-set="material-icons">comment</md-icon></span>
+					<p class="md-body-1">{{ vm.solicitud.motivo }}</p>
+				</div>
+			</div>
+			<div flex layout layout-padding>
+				<div flex layout="column">
+					<span class="md-caption">Itinerario</span>
+					<p class="md-body-1" ng-repeat="vuelo in vm.solicitud.vuelos_solicitados">
+						<md-icon md-font-set="material-icons">flight</md-icon>
+						{{ vuelo.origen + ' - ' + vuelo.destino }}
+					</p>
+				</div>
+				<div flex layout="column">
+					<span class="md-caption">Hoteles</span>
+					<p class="md-body-1" ng-repeat="hotel in vm.solicitud.hoteles_solicitados">
+						<md-icon md-font-set="material-icons">hotel</md-icon>
+						{{ hotel.ciudad + ' - Noches: ' + hotel.numero_noches }}
+					</p>
+				</div>
+			</div>
+			<md-divider></md-divider>
+			<div flex layout="column" layout-padding>
+				<span class="md-subhead">Pasos del proceso de solicitud</span>
+				<div layout layout-align="start start" layout-padding>
+					<div flex="20" layout="column" layout-align="center center">
+						<md-button ng-class="{ 'md-accent': vm.solicitud.fecha_cotizacion, 'md-primary': !vm.solicitud.fecha_cotizacion }" ng-click="vm.abrirCotizacion()">
+							<div layout="column">
+								<span class="md-caption">Cotizar</span>
+								<md-icon md-font-set="material-icons">attach_money</md-icon>
+							</div>
+						</md-button>
+						<p class="md-caption">{{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}</p>
+						<span class="md-caption" ng-show="vm.solicitud.fecha_cotizacion" layout="column" layout-align="center center">
+							<md-icon class="md-accent" md-font-set="material-icons">check</md-icon>
+							{{ vm.solicitud.fecha_cotizacion | date:'dd/MM/yy, h:mm a' }}
+						</span>
+						<span class="md-caption" ng-show="!vm.solicitud.fecha_cotizacion">No ha cotizado</span>
+					</div>
+					<div flex="5" style="margin-top: 58px;">
+						<hr>
+					</div>
+					<div flex="20" layout="column" layout-align="center center">
+						<md-button  ng-disabled="vm.solicitud.paso < 2" ng-class="{ 'md-accent': vm.solicitud.fecha_seleccion, 'md-primary': !vm.solicitud.fecha_seleccion }" ng-click="vm.abrirSeleccion()">
+							<div layout="column">
+								<span class="md-caption">Seleccionar</span>
+								<md-icon md-font-set="material-icons">flight</md-icon>
+							</div>
+						</md-button>
+						<p class="md-caption">{{ vm.solicitud.nombre_viajero + ' ' + vm.solicitud.apellido_viajero }}</p>
+						<span class="md-caption" ng-show="vm.solicitud.fecha_seleccion" layout="column" layout-align="center center">
+							<md-icon class="md-accent" md-font-set="material-icons">check</md-icon>
+							{{ vm.solicitud.fecha_seleccion | date:'dd/MM/yy, h:mm a' }}
+						</span>
+						<span class="md-caption" ng-show="!vm.solicitud.fecha_seleccion">No ha seleccionado</span>
+					</div>
+					<div flex="5" style="margin-top: 58px;">
+						<hr>
+					</div>
+					<div flex="20" layout="column" layout-align="center center">
+						<md-button ng-disabled="vm.solicitud.paso < 3" ng-class="{ 'md-accent': vm.solicitud.autorizada, 'md-primary': !vm.solicitud.autorizada }" ng-click="vm.abrirAutorizacion()">
+							<div layout="column">
+								<span class="md-caption">Autorizar</span>
+								<md-icon md-font-set="material-icons">thumbs_up_down</md-icon>
+							</div>
+						</md-button>
+						<div ng-repeat="autorizador in vm.solicitud.autorizaciones" layout="column" layout-align="center center">
+							<p class="md-caption">{{ autorizador.nombre + ' ' + autorizador.apellido }}</p>
+							<span class="md-caption" ng-show="autorizador.fecha_autorizacion" layout="column" layout-align="center center">
+								<md-icon class="md-accent" md-font-set="material-icons" ng-show="autorizador.solicitud_autorizada">check</md-icon>
+								<md-icon class="md-warn" md-font-set="material-icons" ng-show="!autorizador.solicitud_autorizada">close</md-icon>
+								{{ autorizador.fecha_autorizacion | date:'dd/MM/yy, h:mm a' }}
+							</span>
+							<span class="md-caption" ng-show="!autorizador.fecha_autorizacion">No ha autorizado</span>
+						</div>
+					</div>
+					<div flex="5" style="margin-top: 58px;">
+						<hr>
+					</div>
+					<div flex="20" layout="column" layout-align="center center">
+						<md-button ng-disabled="vm.solicitud.paso < 4" ng-class="{ 'md-accent': vm.solicitud.fecha_compra, 'md-primary': !vm.solicitud.fecha_compra }" ng-click="vm.abrirCompra()">
+							<div layout="column">
+								<span class="md-caption">Comprar</span>
+								<md-icon md-font-set="material-icons">shopping_cart</md-icon>
+							</div>
+						</md-button>
+						<p class="md-caption">{{ vm.solicitud.nombre_administrador + ' ' + vm.solicitud.apellido_administrador }}</p>
+						<span class="md-caption" ng-show="vm.solicitud.fecha_compra">Compró {{ vm.solicitud.fecha_inicio | date:'dd MMM yy, h:mm a' }}</span>
+						<span class="md-caption" ng-show="!vm.solicitud.fecha_compra">No ha comprado</span>
+					</div>
+				</div>
+			</div>
+		</md-content>
+	</md-dialog-content>
+</md-dialog>

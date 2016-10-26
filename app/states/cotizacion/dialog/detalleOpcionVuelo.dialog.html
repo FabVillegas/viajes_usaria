@@ -1,0 +1,69 @@
+<md-dialog aria-label="Detalle de vuelo">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Detalle de vuelo</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="vm.cancelarDialogo()">
+				<md-icon md-font-set="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<md-dialog-content ng-cloak layout-padding style="overflow-x: hidden;">
+		<form name="vm.formaDetalleVuelo">
+			<div layout class="md-inline-form">
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">flight</md-icon>
+					<label>Aerolínea</label>
+					<input type="text" ng-model="vm.opcionVuelo.aerolinea" name="aerolinea" required />
+				</md-input-container>
+				<md-datepicker flex ng-model="vm.opcionVuelo.fecha_salida" name="fecha_salida" required></md-datepicker>
+			</div>
+			<div layout class="md-inline-form">
+				<md-input-container class="md-block">
+					<md-icon md-font-set="material-icons">attach_money</md-icon>
+					<label>Costo cotizado</label>
+					<input type="number" ng-model="vm.opcionVuelo.costo" name="costo" required min="0" />
+				</md-input-container>
+			</div>
+			<div layout class="md-inline-form">
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">flight_takeoff</md-icon>
+					<label>Origen</label>
+					<input type="text" ng-model="vm.opcionVuelo.origen" />
+				</md-input-container>
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">access_time</md-icon>
+					<label>Hora salida</label>
+					<input type="text" ng-model="vm.opcionVuelo.hora_salida" />
+				</md-input-container>
+			</div>
+			<div layout class="md-inline-form">
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">flight_land</md-icon>
+					<label>Destino</label>
+					<input type="text" ng-model="vm.opcionVuelo.destino" />
+				</md-input-container>
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">access_time</md-icon>
+					<label>Hora llegada</label>
+					<input type="text" ng-model="vm.opcionVuelo.hora_llegada" />
+				</md-input-container>
+			</div>
+			<div layout class="md-inline-form">
+				<md-input-container flex class="md-block">
+					<md-icon md-font-set="material-icons">comments</md-icon>
+					<label>Comentarios</label>
+					<input type="text" ng-model="vm.opcionVuelo.comentarios" />
+				</md-input-container>
+			</div>
+		</form>
+	</md-dialog-content>
+	<md-dialog-actions layout-padding>
+		<div layout layout-align="end center">
+			<md-button class="md-primary" ng-click="vm.responderDialogo( true )">
+				<md-icon md-font-set="material-icons">save</md-icon>
+				Guardar cambios
+			</md-button>
+		</div>
+	</md-dialog-actions>
+</md-dialog>
